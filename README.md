@@ -135,6 +135,15 @@ Optional argument: <br/>
 ## Example of use:
 
 ```python
+run_dna_rna_tools('ATG', 'transcribe') # 'AUG'
+run_dna_rna_tools('ATG', 'reverse') # 'GTA'
+run_dna_rna_tools('AtG', 'complement') # 'TaC'
+run_dna_rna_tools('ATg', 'reverse_complement') # 'cAT'
+run_dna_rna_tools('ATG', 'aT', 'reverse') # ['GTA', 'Ta']
+run_dna_rna_tools('AUG', 'aT', 'aCg', 'is_dna_is_rna') # ['RNA', 'DNA', 'ND']
+```
+
+```python
 protein_analysis("ACD", "AD", procedure="one_letter_to_three", letter_format=1) # ['AlaCysAsp', 'AlaAsp']
 protein_analysis("AlaAspLys", "AlaAsp", procedure="molecular_weight", letter_format=3) # [0.37, 0.22]
 protein_analysis("ACD", "AD", procedure="get_amino_acid_sum") # [{'A': 1, 'C': 1, 'D': 1, 'E': 0, 'F': 0, 'G': 0, 'H': 0, 'I': 0, 'K': 0, 'L': 0, 'M': 0, 'N': 0, 'P': 0, 'Q': 0, 'R': 0, 'S': 0, 'T': 0, 'V': 0, 'W': 0, 'Y': 0},
@@ -145,6 +154,11 @@ protein_analysis("FGHIKLMNPQ", "PQRSTVwy", "adN", procedure="brutto_count", lett
 # [{'C': 54, 'H': 103, 'N': 15, 'O': 22, 'S': 1}, {'C': 48, 'H': 83, 'N': 23, 'O': 18, 'S': 3}, {'C': 11, 'H': 22, 'N': 4, 'O': 9, 'S': 0}]
 ```
 
+
+```python
+fastq_thresholding({'@SRX079804:1': ('ACAGCA', 'FGGGFG'), '@SRX079804:2': ('ACAGCAA', 'FGGGFGG')}, (1, 100), 32, 35) # {'@SRX079804:1': ('ACAGCA', 'FGGGFG'), '@SRX079804:2': ('ACAGCAA', 'FGGGFGG')}
+fastq_thresholding({'@SRX079804:1:SRR292678:1:1101:30161:30161': ('GAACGACAGCAGCTCCTGCATAACCGCGTCCTTCTTCTTTAGCGTTGTGCAAAGCATGTTTTGTATTACGGGCATCTCGAGCGAATC', 'DFFFEGDGGGGFGGEDCCDCEFFFFCCCCCB>CEBFGFBGGG?DE=:6@=>A<A>D?D8DCEE:>EEABE5D@5:DDCA;EEE-DCD'), '@SRX079804:2': ('ACAGCAA', 'FGGGFGG')}, (20, 80), (10, 1000), 8) # {'@SRX079804:1:SRR292678:1:1101:30161:30161': ('GAACGACAGCAGCTCCTGCATAACCGCGTCCTTCTTCTTTAGCGTTGTGCAAAGCATGTTTTGTATTACGGGCATCTCGAGCGAATC', 'DFFFEGDGGGGFGGEDCCDCEFFFFCCCCCB')}
+```
 
 ## Input requirements and possible errors:
  - **It is important to indicate the type of operation. An error occurs when you enter an incorrect operation type**
