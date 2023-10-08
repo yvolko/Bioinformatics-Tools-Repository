@@ -95,7 +95,37 @@ Requred arguments:
 Optional argument:
 - cell type (required only for codon_optimization procedure). Accepted cell types Esherichia coli, Pichia pastoris, Mouse
 
+### FASTQ tool
+**fastq_thresholding**(seqs, gc_bounds=(0, 100), length_bounds=(0, 2**32), quality_threshold=0) <br/>
+**Parametrs:**
+> ***seqs** : **dictionary** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;Dictionary where key is string - name of sequence and value is tuple of DNA sequence (string) and its quality score for each nucleotide (string) <br/> <br/>
+    **gc_bounds** : ***tuple, defalut (0, 100)*** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;Tuple: first value is lower boundary of GC-content and second value - upper boundry. Function will filter sequences that are in between given values (including given values). If only one number is given it is taken as upper bound and lower bound is taken as 0. <br/> <br/>
+    **length_bounds** : ***tuple, defalut (0, 2 power(32))*** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;Tuple: first value is lower boundary of length and second value - upper boundry. Function will filter sequences that are in between given values (including given values). If only one number is given it is taken as upper bound and lower bound is taken as 0. <br/> <br/>
+    **quality_threshold** : ***int, defalut 1*** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;If average sequnce quality of given sequence is above or equal to given number sequence will be selected. <br/>
+>
+
+Call the "fastq_thresholding" funcion with following arguments. <br/>
+
+Requred arguments: <br/>
+- dictionary of with key - name, values tuple of sequence and its quality score <br/> 
+
+Optional argument: <br/>
+- gc_bounds
+- length_bounds
+- quality_threshold
+
+
 ## List of procedures:
+***transcribe***: transcribes DNA sequnces
+>> - ***reverse***: return reverse DNA or RNA sequence
+>> - ***complement***: return complement DNA sequence
+>> - ***reverse_complement***: return reverse-complement DNA sequence
+>> - ***get_nucl_acid_type***: checks wether give sequence is DNA or RNA (ND-not defined)
+
 
 - `molecular_weight` — returns list of float values, that indicate predicted molecular weights of given aa sequences (in kDa)
 - `one_letter_to_three` — will return list of strings, containing the same sequences written in three-letter code
