@@ -1,5 +1,9 @@
 # Bioinformatics-Tools-Repository
 Collection of bioinformatic tools to work with fastq sequences, DNA and RNA sequences and protein sequences. 
+# Working with DNA and RNA sequences
+
+This tool helps to get reverse, complement, reverse-complement and transcribed sequences. As well as define if sequense is DNA or is RNA. 
+
 # Working with protein sequences
 
 This tool supports standard 20 amino acids. Any modifications of amino acids are not supported. You can write amino acids in any case (lower, upper or mixed). 
@@ -32,7 +36,7 @@ This project consists of one function "protein_analysis" that helps user to:
 - calculate length of amino acid sequences
 - count the number of atoms of each type in a sequence (brutto formula)  <br/>
 
-Tool is coded with Python.
+
 
 ## How to use:
 **protein_analysis**(**args, procedure, cell_type=None, letter_format=1*) <br/>
@@ -138,8 +142,7 @@ Dasha Sokolova kalabanova_dasha@mail.ru
 <br/>
 Team leader: Ivan Kozin ivan.d.kozin@gmail.com
 <br/>
-Team photo:
-![Снимок экрана 2023-09-29 210559_2](https://github.com/ivandkoz/HW4_Functions2_Kozin/assets/63678919/ad1302a1-d139-4c82-b7eb-d5b9ac1897e8)
+
 
 ## Personal contribution
 `Ivan Kozin` (team leader) worte functions:
@@ -161,6 +164,8 @@ Team photo:
 - one_letter_to_three functions
   
 Writting README, debugging code and testing it has been done by the efforts of all team.
+
+All tools are coded with Python.
 
 
 
