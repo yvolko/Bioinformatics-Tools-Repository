@@ -194,23 +194,11 @@ protein_analysis("AluLysArg", procedure="get_amino_acid_sum", letter_format=3)
 # ValueError: Error alu is not an amino acid. Correct your input
 ```
 
-## Private policy and contacts
-This tool can be freely distributed and used.
-<br/>
-If you have any suggestions for improving the tool or if you find a bug, please contact us by email.
-<br/>
-This tool was developed by the "workaholics" team:
-<br/>
-Yulia Volkova volkova.yulia.leonidovna@gmail.com
-<br/>
-Dasha Sokolova kalabanova_dasha@mail.ru
-<br/>
-Team leader: Ivan Kozin ivan.d.kozin@gmail.com
-<br/>
 
 
 ## Personal contribution
-`Ivan Kozin` (team leader) worte functions:
+Protein tool was written in team with:
+`Ivan Kozin` wrote functions:
 - length
 - brutto_count
 - is_amino_acid
@@ -219,16 +207,11 @@ Team leader: Ivan Kozin ivan.d.kozin@gmail.com
 - is_amino_acid_three_letter
 - managed work with guthub repository
 
-`Dasha Sokolova` (co-leader) wrote functions: 
+`Dasha Sokolova` wrote functions: 
 - get_amino_acid_sum
 - codon_optimization functions
   
-`Yulia Volkova` (co-leader) wrote functions:
-- main (protein_analysis)
-- molecular_weight
-- one_letter_to_three functions
-  
-Writting README, debugging code and testing it has been done by the efforts of all team.
+Everyting else has been written by `Yulia Volkova`.
 
 All tools are coded with Python.
 
