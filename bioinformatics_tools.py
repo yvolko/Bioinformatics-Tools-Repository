@@ -1,4 +1,7 @@
 from typing import Dict, Tuple
+from additional_modules.additional_modules_fastq_thresholding import * 
+from additional_modules.additional_modules_protein_analysis import * 
+from additional_modules.additional_modules_run_dna_rna import * 
 
 def run_dna_rna_tools(*args: str):
     procedure = args[-1]
