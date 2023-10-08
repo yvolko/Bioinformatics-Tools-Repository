@@ -120,13 +120,11 @@ Optional argument: <br/>
 
 
 ## List of procedures:
-***transcribe***: transcribes DNA sequnces
->> - ***reverse***: return reverse DNA or RNA sequence
->> - ***complement***: return complement DNA sequence
->> - ***reverse_complement***: return reverse-complement DNA sequence
->> - ***get_nucl_acid_type***: checks wether give sequence is DNA or RNA (ND-not defined)
-
-
+- `transcribe` — returns list of strings with transcribed sequences (or one string if one sequence is given)
+- `reverse` — returns list of strings with reversed sequences (or one string if one sequence is given)
+- `complement` — returns list of strings with complement sequences (or one string if one sequence is given)
+- `reverse_complement` — returns list of strings with reverse-complement sequences (or one string if one sequence is given)
+- `get_nucl_acid_type` — returns list of string with `DNA`, `RNA` or `ND` ()not defined in it (or one string if one sequence is given)
 - `molecular_weight` — returns list of float values, that indicate predicted molecular weights of given aa sequences (in kDa)
 - `one_letter_to_three` — will return list of strings, containing the same sequences written in three-letter code
 - `get_amino_acid_sum` — сounts the amount of each amino acid in the injected protein sequences
