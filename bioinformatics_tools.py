@@ -1,7 +1,7 @@
 from typing import Dict, Tuple
-from additional_modules.additional_modules_fastq_thresholding import * 
-from additional_modules.additional_modules_protein_analysis import * 
-from additional_modules.additional_modules_run_dna_rna import * 
+from additional_modules.additional_modules_fastq_thresholding import gc_content, is_in_gc_bounds, is_in_length_bounds, is_above_quality_threshold
+from additional_modules.additional_modules_protein_analysis import molecular_weight, one_letter_to_three, get_amino_acid_sum, codon_optimization, length, name_transform, is_amino_acid, brutto_count, is_length_divisible_by_3, is_amino_acid_three_letter, 
+from additional_modules.additional_modules_run_dna_rna_tools import is_valid_dna_rna, transcribe, reverse, complement, reverse_complement, get_nucl_acid_type
 
 def run_dna_rna_tools(*args: str):
     procedure = args[-1]
