@@ -1,5 +1,5 @@
 # Bioinformatics-Tools-Repository
-Collection of bioinformatic tools to work with fastq sequences, DNA and RNA sequences and protein sequences. 
+Collection of bioinformatic tools to work with fastq format, DNA and RNA sequences and protein sequences. 
 # Working with DNA and RNA sequences
 
 This tool helps to get reverse, complement, reverse-complement and transcribed sequences. As well as define if sequense is DNA or is RNA. 
@@ -36,7 +36,10 @@ This project consists of one function "protein_analysis" that helps user to:
 - calculate length of amino acid sequences
 - count the number of atoms of each type in a sequence (brutto formula)  <br/>
 
-
+# Working with fastq format
+This tools choses sequences that satisfy conditions of sertain length, GC content and sequncing quality (phred33 standard). <br/>
+Learn more about fastq files [here](https://stepik.org/lesson/32398/step/1?unit=12379). <br/>
+Learn more about quality score encoding in fastq files [here](https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/QualityScoreEncoding_swBS.htm).
 
 ## How to use:
 **protein_analysis**(**args, procedure, cell_type=None, letter_format=1*) <br/>
