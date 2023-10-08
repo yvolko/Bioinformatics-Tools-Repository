@@ -1,8 +1,29 @@
 # Bioinformatics-Tools-Repository
-Collection of bioinformatic tools to work with fastq sequences, DNA and RNA sequences and protein sequences
-# Protein Info
+Collection of bioinformatic tools to work with fastq sequences, DNA and RNA sequences and protein sequences. 
+# Working with protein sequences
 
 This tool supports standard 20 amino acids. Any modifications of amino acids are not supported. You can write amino acids in any case (lower, upper or mixed). 
+1. Alanine (A, Ala)
+2. Arginine (R, Arg)
+3. Asparagine (N, Asn)
+4. Aspartic Acid (D, Asp)
+5. Cysteine (C, Cys)
+6. Glutamine (Q, Gln)
+7. Glutamic Acid (E, Glu)
+8. Glycine (G, Gly)
+9. Histidine (H, His)
+10. Isoleucine (I, Ile)
+11. Leucine (L, Leu)
+12. Lysine (K, Lys)
+13. Methionine (M, Met)
+14. Phenylalanine (F, Phe)
+15. Proline (P, Pro)
+16. Serine (S, Ser)
+17. Threonine (T, Thr)
+18. Tryptophan (W, Trp)
+19. Tyrosine (Y, Tyr)
+20. Valine (V, Val)
+    
 This project consists of one function "protein_analysis" that helps user to:
 - predict molecular weight of amino acid (aa) sequences
 - translate aa sequences from one-letter to three-letter code
