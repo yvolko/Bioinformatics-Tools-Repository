@@ -42,6 +42,26 @@ Learn more about fastq files [here](https://stepik.org/lesson/32398/step/1?unit=
 Learn more about quality score encoding in fastq files [here](https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/QualityScoreEncoding_swBS.htm).
 
 ## How to use:
+### DNA/RNA tool
+**run_dna_rna_tools**(**args, procedure) <br/>
+**Parametrs:**
+> ***args** : **sequence of str** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;Any number of lines with DNA only or RNA only sequences <br/>
+  **procedure** : ***str*** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;The name of the operation you want to perform. The following types of procedures are supported: <br/>
+>>  
+>> - ***transcribe***: transcribes DNA sequnces
+>> - ***reverse***: return reverse DNA or RNA sequence
+>> - ***complement***: return complement DNA sequence
+>> - ***reverse_complement***: return reverse-complement DNA sequence
+>> - ***get_nucl_acid_type***: checks wether give sequence is DNA or RNA (ND-not defined)
+
+Call the "run_dna_rna_tools" funcion with following arguments.
+Requred arguments:
+- sequence of strings representing only DNA or only RNA. Please do not use a mixture of DNA/RNA sequences in the same function call!
+- name of procedure as string (see list of precedures)
+
+### Protein tool
 **protein_analysis**(**args, procedure, cell_type=None, letter_format=1*) <br/>
 **Parametrs:**
 > ***args** : **sequence of str** <br/>
