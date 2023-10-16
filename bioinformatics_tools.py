@@ -1,3 +1,4 @@
+import os
 from typing import Dict, Tuple, List
 from additional_modules.additional_modules_fastq_thresholding import gc_content, is_in_gc_bounds, is_in_length_bounds, \
     is_above_quality_threshold
@@ -94,7 +95,7 @@ def protein_analysis(
         return procedures.get(procedure)(amino_acid_seqs)
 
 
-def fastq_thresholding(input_path: str, output_filename: str,
+def fastq_thresholding(input_path: str, output_filename: str = '',
                        gc_bounds: Tuple[int, int] = (0, 100),
                        length_bounds: Tuple[int, int] = (0, 2 ** 32),
                        quality_threshold: int = 0):
@@ -112,6 +113,12 @@ def fastq_thresholding(input_path: str, output_filename: str,
         :return: dictionary of the same structure as input, that only contains sequences that passed all the
         thresholdings
         """
+    if output_filename == '':
+        if '\\' in input_path:
+            output_filename = input_path.split('\\')[-1].strip('.txt')
+        else:
+            output_filename = input_path.split('/')[-1].strip('.txt')
+
     initial_sequences = []
     initial_sequences_dict = {}
     with open(input_path) as fasta_file:
@@ -121,7 +128,6 @@ def fastq_thresholding(input_path: str, output_filename: str,
         initial_sequences_dict[initial_sequences[index]] = initial_sequences[index+1], initial_sequences[index+2], initial_sequences[index+3]
 
 
-    thresholded_dict = {}
     if isinstance(gc_bounds, int):
         gc_lower_bound = 0
         gc_upper_bound = gc_bounds
@@ -136,9 +142,18 @@ def fastq_thresholding(input_path: str, output_filename: str,
         length_lower_bound = length_bounds[0]
         length_upper_bound = length_bounds[1]
 
-    for key, value in initial_sequences_dict.items():
-        if is_in_gc_bounds(value[0], gc_lower_bound, gc_upper_bound) & \
-                is_in_length_bounds(value[0], length_lower_bound, length_upper_bound) & \
-                is_above_quality_threshold(value[2], quality_threshold):
-            thresholded_dict[key] = value
-    return thresholded_dict
+    if not os.path.exists('fastq_filtrator_resuls'):
+        os.makedirs('fastq_filtrator_resuls')
+
+    try:
+        with open(os.path.join('fastq_filtrator_resuls', f'{output_filename}.fastq'), mode='x') as file:
+            for key, value in initial_sequences_dict.items():
+                if is_in_gc_bounds(value[0], gc_lower_bound, gc_upper_bound) & \
+                        is_in_length_bounds(value[0], length_lower_bound, length_upper_bound) & \
+                        is_above_quality_threshold(value[2], quality_threshold):
+                    file.write(key+'\n')
+                    file.write(value[0] + '\n')
+                    file.write(value[1] + '\n')
+                    file.write(value[2] + '\n')
+    except FileExistsError:
+        print('File with the provided name already exist. Please use another name.')
