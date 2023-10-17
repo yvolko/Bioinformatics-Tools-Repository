@@ -1,7 +1,7 @@
 import os
 import codecs
 
-def convert_multiline_fasta_to_oneline(input_fasta: str, output_fasta: str = ''):
+def convert_multiline_fasta_to_oneline(input_fasta: str, output_fasta: str = '') -> None:
     if output_fasta == '':
         output_fasta = os.path.basename(input_fasta)
         output_fasta = output_fasta.split('.')
@@ -22,7 +22,7 @@ def convert_multiline_fasta_to_oneline(input_fasta: str, output_fasta: str = '')
 
 
 def select_genes_from_gbk_to_fasta(input_gbk: str, genes: str, n_before: int = 1,
-                                   n_after: int = 1, output_fasta: str = ''):
+                                   n_after: int = 1, output_fasta: str = '') -> None:
     if output_fasta == '':
         output_fasta = os.path.basename(input_gbk)
         output_fasta = output_fasta.split('.')
@@ -55,9 +55,25 @@ def select_genes_from_gbk_to_fasta(input_gbk: str, genes: str, n_before: int = 1
                             line = input_file.readline().replace('\"', '')
             line = input_file.readline()
 
+    for gene in genes:
+        if gene in input_dict_position.keys():
+            current_gene_position = input_dict_position[gene]
+            neighbours_of_gene = {}
+            left_border = current_gene_position - n_before
+            right_border = current_gene_position + n_after
+            if left_border < 0:
+                left_border = 0
+            if right_border >= len(input_dict_position):
+                right_border = len(input_dict_position)
+            for key, value in input_dict_position.items():
+                if value in range (left_border, right_border+1) and key != gene:
+                    neighbours_of_gene[key] = input_dict_sequences[key]
+        else:
+            raise ValueError(f'The gene {gene} is not in the data.')
+
     try:
-        with open(f'{output_fasta}.txt', mode='w') as file:
-            for key, value in input_dict_sequences.items():
+        with open(f'{output_fasta}.fasta', mode='x') as file:
+            for key, value in neighbours_of_gene.items():
                 file.write(f'>{key}\n')
                 file.write(value + '\n')
     except FileExistsError:
