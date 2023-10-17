@@ -207,7 +207,16 @@ protein_analysis("FGHIKLMNPQ", "PQRSTVwy", "adN", procedure="brutto_count", lett
 ```python
 fastq_thresholding("C:\\Users\\name\\Desktop\\pythonProject\\example_data.txt", "my_file22", length_bounds=(1,1000)) # in windows OS
 fastq_thresholding("/Users/volko/Desktop/pythonProject/example_data.txt", "my_file22", length_bounds=(1,1000)) # in Linux/Mac OS
+```
 
+```python
+select_genes_from_gbk_to_fasta('C:\\Users\\name\\Desktop\\pythonProject\\example_gbk.gbk', "rrrD_1 pxpB", n_before=2, n_after=2) # in windows OS
+fastq_thresholding("/Users/name/Desktop/pythonProject/example_gbk.gbk", "my_file22", length_bounds=(1,1000)) # in Linux/Mac OS
+```
+
+```python
+convert_multiline_fasta_to_oneline('C:\\Users\\name\\Desktop\\pythonProject\\example_multiline_fasta.fasta')) # in windows OS
+convert_multiline_fasta_to_oneline("/Users/name/Desktop/pythonProject/example_multiline_fasta.fasta", "my_file22", length_bounds=(1,1000)) # in Linux/Mac OS
 ```
 
 ## Input requirements and possible errors:
@@ -244,10 +253,20 @@ protein_analysis("AluLysArg", procedure="get_amino_acid_sum", letter_format=3)
 # ValueError: Error alu is not an amino acid. Correct your input
 ```
 
- - **If file with the name equal to output_filename already exists FileExistsError will occure**
+ - **If file with the name equal to output_filename (in fastq_thresholding function) or equal output_fasta (in convert_multiline_fasta_to_oneline or in select_genes_from_gbk_to_fasta functions) already exists FileExistsError will occure**
 ```python
 fastq_thresholding("C:\\Users\\name\\Desktop\\pythonProject\\example_data.txt", "my_file22", length_bounds=(1,1000))
 # FileExistsError: File with the provided name already exist. Please use another name.
+convert_multiline_fasta_to_oneline("C:\\Users\\name\\Desktop\\pythonProject\\example_multiline_fasta.fasta", "my_file22", )
+# FileExistsError: File with the provided name already exist. Please use another name.
+select_genes_from_gbk_to_fasta("C:\\Users\\name\\Desktop\\pythonProject\\example_gbk.gbk", "my_file22", "rrrD_1 pxpB", n_before=2, n_after=2)
+# FileExistsError: File with the provided name already exist. Please use another name.
+```
+
+ - **If at least one of the genes in the parameter genes (function select_genes_from_gbk_to_fasta) is not in the input gbk file ValueError will occure**
+```python
+select_genes_from_gbk_to_fasta('C:\\Users\\name\\Desktop\\pythonProject\\example_gbk.gbk', "AMMMttt", n_before=2, n_after=2)
+# ValueError: 'The gene AMMMttt is not in the data.'
 ```
 
 ## Personal contribution
