@@ -45,8 +45,9 @@ def select_genes_from_gbk_to_fasta(input_gbk: str,
     :param genes: string, genes of interest separated with space
     :param n_before: integer, how many genes to take before gene of interest
     :param n_after: integer, how many genes to take after gene of interest
-    :param output_fasta: string, name of the output fasta file. 
-    By default - input gbk file name is taken and "_selected_genes" is added to it.
+    :param output_fasta: string, name of the output fasta file.
+    By default - input gbk file name is taken and "_selected_genes"
+    is added to it.
     :return: None. Will write output to the file.
     """
     if output_fasta == '':
@@ -101,6 +102,6 @@ def select_genes_from_gbk_to_fasta(input_gbk: str,
         with open(f'{output_fasta}.fasta', mode='x') as file:
             for key, value in neighbours_of_gene.items():
                 file.write(f'>{key}\n')
-                file.write(value + '\n')
+                file.write(f'{value}\n')
     except FileExistsError:
         print('File with the provided name already exist. Please use another name.')
