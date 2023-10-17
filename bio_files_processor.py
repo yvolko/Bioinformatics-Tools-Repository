@@ -1,13 +1,15 @@
 import os
 import codecs
 
-def convert_multiline_fasta_to_oneline(input_fasta: str, output_fasta: str = '') -> None:
+
+def convert_multiline_fasta_to_oneline(input_fasta: str, 
+                                       output_fasta: str = '') -> None:
     """
     Converts fasta file where sequences are written on multiple lines
     to fasta file where each sequence is written on one line
-    :param input_fasta: string, valid path to the input file 
+    :param input_fasta: string, valid path to the input file
     with the name of the file and file extension at the end
-    :param output_fasta: string, name of the output file. 
+    :param output_fasta: string, name of the output file.
     By default - input fasta file name is taken and "_oneline" is added to it.
     :return: None. Will write output to the file.
     """
@@ -30,11 +32,14 @@ def convert_multiline_fasta_to_oneline(input_fasta: str, output_fasta: str = '')
             print('File with the provided name already exist. Please use another name.')
 
 
-def select_genes_from_gbk_to_fasta(input_gbk: str, genes: str, n_before: int = 1,
-                                   n_after: int = 1, output_fasta: str = '') -> None:
+def select_genes_from_gbk_to_fasta(input_gbk: str, 
+                                   genes: str, 
+                                   n_before: int = 1,
+                                   n_after: int = 1, 
+                                   output_fasta: str = '') -> None:
     """
     Select neighbours of the gene(s) provided from gbk input file.
-    :param input_gbk: string, valid path to the input gbk file 
+    :param input_gbk: string, valid path to the input gbk file
     with the name of the file and file extension at the end
     :param genes: string, genes of interest separated with space
     :param n_before: integer, how many genes to take before gene of interest
@@ -66,19 +71,19 @@ def select_genes_from_gbk_to_fasta(input_gbk: str, genes: str, n_before: int = 1
                         line = input_file.readline()
                     input_dict_sequences[name] = line.split('\"')[1].strip()
                     if line.strip()[-1] == '\"':
-                        break
+                        pass
                     else:
                         line = input_file.readline().strip()
-                        while 'CDS' not in line:
-                            new_value = input_dict_sequences[name] + line.strip()
-                            input_dict_sequences[name] = new_value
-                            line = input_file.readline().replace('\"', '')
+                        input_dict_sequences[name] += line.split('\"')[0].strip()
+                        while '\"' not in line:
+                            line = input_file.readline()
+                            input_dict_sequences[name] += line.split('\"')[0].strip()
             line = input_file.readline()
 
+    neighbours_of_gene = {}
     for gene in genes:
         if gene in input_dict_position.keys():
             current_gene_position = input_dict_position[gene]
-            neighbours_of_gene = {}
             left_border = current_gene_position - n_before
             right_border = current_gene_position + n_after
             if left_border < 0:
@@ -86,7 +91,7 @@ def select_genes_from_gbk_to_fasta(input_gbk: str, genes: str, n_before: int = 1
             if right_border >= len(input_dict_position):
                 right_border = len(input_dict_position)
             for key, value in input_dict_position.items():
-                if value in range (left_border, right_border+1) and key != gene:
+                if value in range(left_border, right_border+1) and key != gene:
                     neighbours_of_gene[key] = input_dict_sequences[key]
         else:
             raise ValueError(f'The gene {gene} is not in the data.')
