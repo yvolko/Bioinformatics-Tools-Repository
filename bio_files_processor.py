@@ -2,12 +2,21 @@ import os
 import codecs
 
 def convert_multiline_fasta_to_oneline(input_fasta: str, output_fasta: str = '') -> None:
+    """
+    Converts fasta file where sequences are written on multiple lines
+    to fasta file where each sequence is written on one line
+    :param input_fasta: string, valid path to the input file 
+    with the name of the file and file extension at the end
+    :param output_fasta: string, name of the output file. 
+    By default - input fasta file name is taken and "_oneline" is added to it.
+    :return: None. Will write output to the file.
+    """
     if output_fasta == '':
         output_fasta = os.path.basename(input_fasta)
         output_fasta = output_fasta.split('.')
         output_fasta = f'{output_fasta[0]}_oneline.{output_fasta[1]}'
 
-    with open (input_fasta) as input_file:
+    with open(input_fasta) as input_file:
         try:
             with open(output_fasta, 'x') as output_file:
                 output_file.write(input_file.readline())
@@ -23,6 +32,17 @@ def convert_multiline_fasta_to_oneline(input_fasta: str, output_fasta: str = '')
 
 def select_genes_from_gbk_to_fasta(input_gbk: str, genes: str, n_before: int = 1,
                                    n_after: int = 1, output_fasta: str = '') -> None:
+    """
+    Select neighbours of the gene(s) provided from gbk input file.
+    :param input_gbk: string, valid path to the input gbk file 
+    with the name of the file and file extension at the end
+    :param genes: string, genes of interest separated with space
+    :param n_before: integer, how many genes to take before gene of interest
+    :param n_after: integer, how many genes to take after gene of interest
+    :param output_fasta: string, name of the output fasta file. 
+    By default - input gbk file name is taken and "_selected_genes" is added to it.
+    :return: None. Will write output to the file.
+    """
     if output_fasta == '':
         output_fasta = os.path.basename(input_gbk)
         output_fasta = output_fasta.split('.')
