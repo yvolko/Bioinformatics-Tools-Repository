@@ -66,19 +66,19 @@ def select_genes_from_gbk_to_fasta(input_gbk: str, genes: str, n_before: int = 1
                         line = input_file.readline()
                     input_dict_sequences[name] = line.split('\"')[1].strip()
                     if line.strip()[-1] == '\"':
-                        break
+                        pass
                     else:
                         line = input_file.readline().strip()
-                        while 'CDS' not in line:
-                            new_value = input_dict_sequences[name] + line.strip()
-                            input_dict_sequences[name] = new_value
-                            line = input_file.readline().replace('\"', '')
+                        input_dict_sequences[name] += line.split('\"')[0].strip()
+                        while '\"' not in line:
+                            line = input_file.readline()
+                            input_dict_sequences[name] += line.split('\"')[0].strip()
             line = input_file.readline()
 
+    neighbours_of_gene = {}
     for gene in genes:
         if gene in input_dict_position.keys():
             current_gene_position = input_dict_position[gene]
-            neighbours_of_gene = {}
             left_border = current_gene_position - n_before
             right_border = current_gene_position + n_after
             if left_border < 0:
