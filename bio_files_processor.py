@@ -2,7 +2,7 @@ import os
 import codecs
 
 
-def convert_multiline_fasta_to_oneline(input_fasta: str, 
+def convert_multiline_fasta_to_oneline(input_fasta: str,
                                        output_fasta: str = '') -> None:
     """
     Converts fasta file where sequences are written on multiple lines
@@ -29,13 +29,14 @@ def convert_multiline_fasta_to_oneline(input_fasta: str,
                     else:
                         output_file.write(line.strip())
         except FileExistsError:
-            print('File with the provided name already exist. Please use another name.')
+            print(f'File with the {output_fasta} name already exist.')
+            print('Please use another name.')
 
 
-def select_genes_from_gbk_to_fasta(input_gbk: str, 
-                                   genes: str, 
+def select_genes_from_gbk_to_fasta(input_gbk: str,
+                                   genes: str,
                                    n_before: int = 1,
-                                   n_after: int = 1, 
+                                   n_after: int = 1,
                                    output_fasta: str = '') -> None:
     """
     Select neighbours of the gene(s) provided from gbk input file.
