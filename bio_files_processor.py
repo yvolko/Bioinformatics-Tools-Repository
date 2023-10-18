@@ -104,5 +104,5 @@ def select_genes_from_gbk_to_fasta(input_gbk: str,
                 file.write(f'>{key}\n')
                 file.write(f'{value}\n')
     except FileExistsError:
-        print('File with the provided name already exist.'
+        print('File with the provided name already exist.')
         print('Please use another name.')
