@@ -47,6 +47,9 @@ Converts fasta file where sequences are written on multiple lines to fasta file 
 # Select genes from gbk to fasta
 Selects neighbouring genes to the genes of interest.
 
+# Change fasta start position
+Changes start positon of sequence to a values given by user.
+
 ## How to use:
 ### DNA/RNA tool
 **run_dna_rna_tools**(**args, procedure) <br/>
@@ -168,6 +171,22 @@ Optional argument: <br/>
 - n_after
 - output_fasta
 
+### Change fasta start position
+> ***input_fasta** : **str** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;String, valid path to the input file with the name of file and extension of the file <br/> <br/>
+> ***shift** : **int** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;Integer, shift to move start position. <br/> <br/>
+> ***output_fasta** : **str** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;String, name of the output file. <br/> <br/>
+
+Call the "change_fasta_start_pos" funcion with following arguments. <br/>
+
+Requred arguments: <br/>
+- input_fasta <br/>
+- shift <br/>
+- output_fasta <br/>
+
+
 ## List of procedures:
 - `transcribe` — returns list of strings with transcribed sequences (or one string if one sequence is given)
 - `reverse` — returns list of strings with reversed sequences (or one string if one sequence is given)
@@ -215,9 +234,15 @@ fastq_thresholding("/Users/name/Desktop/pythonProject/example_gbk.gbk", "my_file
 ```
 
 ```python
-convert_multiline_fasta_to_oneline('C:\\Users\\name\\Desktop\\pythonProject\\example_multiline_fasta.fasta')) # in windows OS
+convert_multiline_fasta_to_oneline('C:\\Users\\name\\Desktop\\pythonProject\\example_multiline_fasta.fasta') # in windows OS
 convert_multiline_fasta_to_oneline("/Users/name/Desktop/pythonProject/example_multiline_fasta.fasta", "my_file22", length_bounds=(1,1000)) # in Linux/Mac OS
 ```
+
+```python
+change_fasta_start_pos("C:\\Users\\name\\Desktop\\pythonProject\\docshift.txt", 2, "shifted_line") # in windows OS
+convert_multiline_fasta_to_oneline("/Users/name/Desktop/pythonProject/docshift.txt", 2, "shifted_line") # in Linux/Mac OS
+```
+
 
 ## Input requirements and possible errors:
  - **It is important to indicate the type of operation. An error occurs when you enter an incorrect operation type**
@@ -253,7 +278,7 @@ protein_analysis("AluLysArg", procedure="get_amino_acid_sum", letter_format=3)
 # ValueError: Error alu is not an amino acid. Correct your input
 ```
 
- - **If file with the name equal to output_filename (in fastq_thresholding function) or equal output_fasta (in convert_multiline_fasta_to_oneline or in select_genes_from_gbk_to_fasta functions) already exists FileExistsError will occure**
+ - **If file with the name equal to output_filename (in fastq_thresholding function) or equal output_fasta (in convert_multiline_fasta_to_oneline, in select_genes_from_gbk_to_fasta or in change_fasta_start_pos functions) already exists FileExistsError will occure**
 ```python
 fastq_thresholding("C:\\Users\\name\\Desktop\\pythonProject\\example_data.txt", "my_file22", length_bounds=(1,1000))
 # FileExistsError: File with the provided name already exist. Please use another name.
