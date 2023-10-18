@@ -129,5 +129,5 @@ def change_fasta_start_pos(input_fasta: str,
                 output_file.write(line_1)
                 output_file.write(shifted_line)
         except FileExistsError:
-            print('File with the provided name already exist.'
+            print('File with the provided name already exist.')
             print('Please use another name.')
