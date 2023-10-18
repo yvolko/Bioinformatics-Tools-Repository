@@ -1,5 +1,4 @@
 import os
-import codecs
 
 
 def convert_multiline_fasta_to_oneline(input_fasta: str,
@@ -18,9 +17,9 @@ def convert_multiline_fasta_to_oneline(input_fasta: str,
         output_fasta = output_fasta.split('.')
         output_fasta = f'{output_fasta[0]}_oneline.{output_fasta[1]}'
 
-    with open(input_fasta) as input_file:
+    with open(input_fasta, 'r', encoding='utf-8') as input_file:
         try:
-            with open(output_fasta, 'x') as output_file:
+            with open(output_fasta, 'x', encoding='utf-8') as output_file:
                 output_file.write(input_file.readline())
                 for line in input_file.readlines():
                     if line.startswith('>'):
@@ -59,7 +58,7 @@ def select_genes_from_gbk_to_fasta(input_gbk: str,
     input_dict_position = {}
     input_dict_sequences = {}
 
-    with codecs.open(input_gbk, 'r', 'utf-8') as input_file:
+    with open(input_gbk, 'r', encoding='utf-8') as input_file:
         gene_order_number = 1
         line = input_file.readline()
         while line:
@@ -76,10 +75,12 @@ def select_genes_from_gbk_to_fasta(input_gbk: str,
                         pass
                     else:
                         line = input_file.readline().strip()
-                        input_dict_sequences[name] += line.split('\"')[0].strip()
+                        line = line.split('\"')[0].strip()
+                        input_dict_sequences[name] += line
                         while '\"' not in line:
                             line = input_file.readline()
-                            input_dict_sequences[name] += line.split('\"')[0].strip()
+                            line.split('\"')[0].strip()
+                            input_dict_sequences[name] += line
             line = input_file.readline()
 
     neighbours_of_gene = {}
@@ -99,10 +100,9 @@ def select_genes_from_gbk_to_fasta(input_gbk: str,
             raise ValueError(f'The gene {gene} is not in the data.')
 
     try:
-        with open(f'{output_fasta}.fasta', mode='x') as file:
+        with open(f'{output_fasta}.fasta', mode='x', encoding='utf-8') as file:
             for key, value in neighbours_of_gene.items():
                 file.write(f'>{key}\n')
                 file.write(f'{value}\n')
     except FileExistsError:
-        print('File with the provided name already exist. Please use another name.')
-
+      print('File with the provided name already exist. Please use another name.')
