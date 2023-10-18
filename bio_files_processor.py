@@ -106,3 +106,28 @@ def select_genes_from_gbk_to_fasta(input_gbk: str,
     except FileExistsError:
         print('File with the provided name already exist.')
         print('Please use another name.')
+
+def change_fasta_start_pos(input_fasta: str,
+                           shift: int,
+                           output_fasta: str) -> None:
+    """
+    Will return fasta read from (shifted to) the position equals to shift.
+    :param input_fasta: string, valid path to the input file
+    (this file should contain only one sequence:
+    first line starts with '>', second line - sequence)
+    :param shift: integer, step to shift start of reading the sequence
+    :param output_fasta: string, name of the output file
+    :return: None, will print data to fasta file
+    """
+    output_fasta = output_fasta + '.fasta'
+    with open(input_fasta, 'r', encoding='utf-8') as input_file:
+        line_1 = input_file.readline()
+        line_2 = input_file.readline().strip()
+        shifted_line = line_2[shift:] + line_2[:shift]
+        try:
+            with open(output_fasta, 'x', encoding='utf-8') as output_file:
+                output_file.write(line_1)
+                output_file.write(shifted_line)
+        except FileExistsError:
+            print('File with the provided name already exist.'
+            print('Please use another name.')
