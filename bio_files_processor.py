@@ -89,8 +89,7 @@ def select_genes_from_gbk_to_fasta(input_gbk: str,
             current_gene_position = input_dict_position[gene]
             left_border = current_gene_position - n_before
             right_border = current_gene_position + n_after
-            if left_border < 0:
-                left_border = 0
+            left_border = max(left_border, 0)
             if right_border >= len(input_dict_position):
                 right_border = len(input_dict_position)
             for key, value in input_dict_position.items():
@@ -105,4 +104,5 @@ def select_genes_from_gbk_to_fasta(input_gbk: str,
                 file.write(f'>{key}\n')
                 file.write(f'{value}\n')
     except FileExistsError:
-      print('File with the provided name already exist. Please use another name.')
+        print('File with the provided name already exist.'
+        print('Please use another name.')
