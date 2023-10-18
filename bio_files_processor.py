@@ -107,6 +107,7 @@ def select_genes_from_gbk_to_fasta(input_gbk: str,
         print('File with the provided name already exist.')
         print('Please use another name.')
 
+
 def change_fasta_start_pos(input_fasta: str,
                            shift: int,
                            output_fasta: str) -> None:
