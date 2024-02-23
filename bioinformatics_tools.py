@@ -1,9 +1,30 @@
-from typing import Dict, Tuple
-from additional_modules.additional_modules_fastq_thresholding import gc_content, is_in_gc_bounds, is_in_length_bounds, is_above_quality_threshold
-from additional_modules.additional_modules_protein_analysis import molecular_weight, one_letter_to_three, get_amino_acid_sum, codon_optimization, length, name_transform, is_amino_acid, brutto_count, is_length_divisible_by_3, is_amino_acid_three_letter 
-from additional_modules.additional_modules_run_dna_rna_tools import is_valid_dna_rna, transcribe, reverse, complement, reverse_complement, get_nucl_acid_type
+import os
+from typing import Dict, Tuple, List
+from additional_modules.additional_modules_fastq_thresholding import gc_content, is_in_gc_bounds, is_in_length_bounds, \
+    is_above_quality_threshold
+from additional_modules.additional_modules_protein_analysis import molecular_weight, one_letter_to_three, \
+    get_amino_acid_sum, codon_optimization, length, name_transform, is_amino_acid, brutto_count, \
+    is_length_divisible_by_3, is_amino_acid_three_letter
+from additional_modules.additional_modules_run_dna_rna_tools import is_valid_dna_rna, transcribe, reverse, complement, \
+    reverse_complement, get_nucl_acid_type
 
-def run_dna_rna_tools(*args: str):
+
+def run_dna_rna_tools(*args: List[str]) -> List[str]:
+    """
+    run_dna_rna_tools(*args: List[str])
+    args: sequences of DNA or RNA
+    last element in args: name of procedure
+    available procedures:
+        - transcribe
+        - reverse
+        - complement
+        - reverse_complement
+        - get_nucl_acid_type
+
+    Returns:
+        - list of sequences modified according to procedure
+        - or string if only one sequence was given
+    """
     procedure = args[-1]
     seqs = args[:-1]
 
@@ -28,6 +49,7 @@ def run_dna_rna_tools(*args: str):
     if len(processed_result) == 1:
         return processed_result[0]
     return processed_result
+
 
 def protein_analysis(
         *args: str, procedure: str, cell_type: str = None, letter_format: int = 1
@@ -72,12 +94,40 @@ def protein_analysis(
     else:
         return procedures.get(procedure)(amino_acid_seqs)
 
-    
-def fastq_thresholding(seqs: Dict[str, Tuple[str, str]],
+
+def fastq_thresholding(input_path: str, output_filename: str = '',
                        gc_bounds: Tuple[int, int] = (0, 100),
-                       length_bounds: Tuple[int, int] = (0, 2**32),
+                       length_bounds: Tuple[int, int] = (0, 2 ** 32),
                        quality_threshold: int = 0):
-    thresholded_dict = {}
+    """
+        fastq_thresholding(seqs: Dict[str, Tuple[str, str]], gc_bounds: Tuple[int, int] = (0, 100),
+                           length_bounds: Tuple[int, int] = (0, 2 ** 32), quality_threshold: int = 0)
+        :param seqs: dictionary where key is sequence name, and value is tuple containing
+        sequence and its quality of sequencing in phred33 scale
+        :param gc_bounds: borders of GC-content that will be used to filter sequence
+        :param length_bounds: borders of sequence length that will be used to filter sequence
+        :param quality_threshold: borders of quality that will be used to filter sequence (mean quality of the sequence
+        is considered to pass the treshold)
+        All the borders include upper and lower values.
+
+        :return: dictionary of the same structure as input, that only contains sequences that passed all the
+        thresholdings
+        """
+    if output_filename == '':
+        if '\\' in input_path:
+            output_filename = input_path.split('\\')[-1].strip('.txt')
+        else:
+            output_filename = input_path.split('/')[-1].strip('.txt')
+
+    initial_sequences = []
+    initial_sequences_dict = {}
+    with open(input_path) as fasta_file:
+        for line in fasta_file.readlines():
+            initial_sequences.append(line.strip())
+    for index in range(0, len(initial_sequences), 4):
+        initial_sequences_dict[initial_sequences[index]] = initial_sequences[index+1], initial_sequences[index+2], initial_sequences[index+3]
+
+
     if isinstance(gc_bounds, int):
         gc_lower_bound = 0
         gc_upper_bound = gc_bounds
@@ -92,9 +142,18 @@ def fastq_thresholding(seqs: Dict[str, Tuple[str, str]],
         length_lower_bound = length_bounds[0]
         length_upper_bound = length_bounds[1]
 
-    for key, value in seqs.items():
-        if is_in_gc_bounds(value[0], gc_lower_bound, gc_upper_bound) & \
-                is_in_length_bounds(value[0], length_lower_bound, length_upper_bound) & \
-                is_above_quality_threshold(value[1], quality_threshold):
-            thresholded_dict[key] = value
-    return thresholded_dict
+    if not os.path.exists('fastq_filtrator_resuls'):
+        os.makedirs('fastq_filtrator_resuls')
+
+    try:
+        with open(os.path.join('fastq_filtrator_resuls', f'{output_filename}.fastq'), mode='x') as file:
+            for key, value in initial_sequences_dict.items():
+                if is_in_gc_bounds(value[0], gc_lower_bound, gc_upper_bound) & \
+                        is_in_length_bounds(value[0], length_lower_bound, length_upper_bound) & \
+                        is_above_quality_threshold(value[2], quality_threshold):
+                    file.write(key+'\n')
+                    file.write(value[0] + '\n')
+                    file.write(value[1] + '\n')
+                    file.write(value[2] + '\n')
+    except FileExistsError:
+        print('File with the provided name already exist. Please use another name.')

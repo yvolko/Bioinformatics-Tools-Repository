@@ -1,5 +1,5 @@
 # Bioinformatics-Tools-Repository
-Collection of bioinformatic tools to work with fastq format, DNA and RNA sequences and protein sequences. 
+Collection of bioinformatic tools to work with fastq format, gbk, DNA and RNA sequences and protein sequences. 
 # Working with DNA and RNA sequences
 
 This tool helps to get reverse, complement, reverse-complement and transcribed sequences. As well as define if sequense is DNA or is RNA. 
@@ -40,6 +40,15 @@ This project consists of one function "protein_analysis" that helps user to:
 This tools choses sequences that satisfy conditions of sertain length, GC content and sequncing quality (phred33 standard). <br/>
 Learn more about fastq files [here](https://stepik.org/lesson/32398/step/1?unit=12379). <br/>
 Learn more about quality score encoding in fastq files [here](https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/QualityScoreEncoding_swBS.htm).
+
+# Convert multiline fasta file to oneline fasta file
+Converts fasta file where sequences are written on multiple lines to fasta file where each sequence is written as single line.
+
+# Select genes from gbk to fasta
+Selects neighbouring genes to the genes of interest.
+
+# Change fasta start position
+Changes start positon of sequence to a values given by user.
 
 ## How to use:
 ### DNA/RNA tool
@@ -96,10 +105,12 @@ Optional argument:
 - cell type (required only for codon_optimization procedure). Accepted cell types Esherichia coli, Pichia pastoris, Mouse
 
 ### FASTQ tool
-**fastq_thresholding**(seqs, gc_bounds=(0, 100), length_bounds=(0, 2**32), quality_threshold=0) <br/>
+**fastq_thresholding**(input_path, output_filename = '', gc_bounds = (0, 100), length_bounds = (0, 2 ** 32), quality_threshold = 0) <br/>
 **Parametrs:**
-> ***seqs** : **dictionary** <br/>
-> &nbsp;&nbsp;&nbsp;&nbsp;Dictionary where key is string - name of sequence and value is tuple of DNA sequence (string) and its quality score for each nucleotide (string) <br/> <br/>
+> ***input_path** : **str** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;String, valid path to the input file with the name of file and extension of the file <br/> <br/>
+> ***output_filename** : **str** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;String, name of the output file. By default - input fasta file name is taken. <br/> <br/>
     **gc_bounds** : ***tuple, defalut (0, 100)*** <br/>
 > &nbsp;&nbsp;&nbsp;&nbsp;Tuple: first value is lower boundary of GC-content and second value - upper boundry. Function will filter sequences that are in between given values (including given values). If only one number is given it is taken as upper bound and lower bound is taken as 0. <br/> <br/>
     **length_bounds** : ***tuple, defalut (0, 2 power(32))*** <br/>
@@ -111,12 +122,69 @@ Optional argument:
 Call the "fastq_thresholding" funcion with following arguments. <br/>
 
 Requred arguments: <br/>
-- dictionary of with key - name, values tuple of sequence and its quality score <br/> 
+- input_path <br/> 
 
 Optional argument: <br/>
+- output_filename
 - gc_bounds
 - length_bounds
 - quality_threshold
+
+### Convert multiline fasta file to oneline fasta file
+**convert_multiline_fasta_to_oneline**(input_fasta, output_fasta = '') <br/>
+**Parametrs:**
+> ***input_fasta** : **str** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;String, valid path to the input file with the name of file and extension of the file <br/> <br/>
+> ***output_fasta** : **str** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;String, name of the output file. By default - input fasta file name is taken and "_oneline" is added to it. <br/> <br/>
+
+Call the "convert_multiline_fasta_to_oneline" funcion with following arguments. <br/>
+
+Requred arguments: <br/>
+- input_fasta <br/> 
+
+Optional argument: <br/>
+- output_fasta
+
+### Select genes from gbk to fasta
+**select_genes_from_gbk_to_fasta**(input_gbk, genes, n_before = 1, n_after = 1, output_fasta = '') <br/>
+**Parametrs:**
+> ***input_gbk** : **str** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;String, valid path to the input file with the name of file and extension of the file <br/> <br/>
+> ***genes** : **str** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;String, genes of interest separated with space. <br/> <br/>
+> ***n_before** : **int** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;Integer, how many genes to select before gene of interest. By default equal to 1. <br/> <br/>
+> ***n_after** : **int** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;Integer, how many genes to select after gene of interest. By default equal to 1. <br/> <br/>
+> ***output_fasta** : **str** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;String, name of the output fasta file. By default name of the input gbk file is taken and "_selected_genes" is added. <br/> <br/>
+
+Call the "select_genes_from_gbk_to_fasta" funcion with following arguments. <br/>
+
+Requred arguments: <br/>
+- input_gbk <br/>
+- genes <br/>
+
+Optional argument: <br/>
+- n_before
+- n_after
+- output_fasta
+
+### Change fasta start position
+> ***input_fasta** : **str** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;String, valid path to the input file with the name of file and extension of the file <br/> <br/>
+> ***shift** : **int** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;Integer, shift to move start position. <br/> <br/>
+> ***output_fasta** : **str** <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;String, name of the output file. <br/> <br/>
+
+Call the "change_fasta_start_pos" funcion with following arguments. <br/>
+
+Requred arguments: <br/>
+- input_fasta <br/>
+- shift <br/>
+- output_fasta <br/>
 
 
 ## List of procedures:
@@ -156,9 +224,25 @@ protein_analysis("FGHIKLMNPQ", "PQRSTVwy", "adN", procedure="brutto_count", lett
 
 
 ```python
-fastq_thresholding({'@SRX079804:1': ('ACAGCA', 'FGGGFG'), '@SRX079804:2': ('ACAGCAA', 'FGGGFGG')}, (1, 100), 32, 35) # {'@SRX079804:1': ('ACAGCA', 'FGGGFG'), '@SRX079804:2': ('ACAGCAA', 'FGGGFGG')}
-fastq_thresholding({'@SRX079804:1:SRR292678:1:1101:30161:30161': ('GAACGACAGCAGCTCCTGCATAACCGCGTCCTTCTTCTTTAGCGTTGTGCAAAGCATGTTTTGTATTACGGGCATCTCGAGCGAATC', 'DFFFEGDGGGGFGGEDCCDCEFFFFCCCCCB>CEBFGFBGGG?DE=:6@=>A<A>D?D8DCEE:>EEABE5D@5:DDCA;EEE-DCD'), '@SRX079804:2': ('ACAGCAA', 'FGGGFGG')}, (20, 80), (10, 1000), 8) # {'@SRX079804:1:SRR292678:1:1101:30161:30161': ('GAACGACAGCAGCTCCTGCATAACCGCGTCCTTCTTCTTTAGCGTTGTGCAAAGCATGTTTTGTATTACGGGCATCTCGAGCGAATC', 'DFFFEGDGGGGFGGEDCCDCEFFFFCCCCCB')}
+fastq_thresholding("C:\\Users\\name\\Desktop\\pythonProject\\example_data.txt", "my_file22", length_bounds=(1,1000)) # in windows OS
+fastq_thresholding("/Users/volko/Desktop/pythonProject/example_data.txt", "my_file22", length_bounds=(1,1000)) # in Linux/Mac OS
 ```
+
+```python
+select_genes_from_gbk_to_fasta('C:\\Users\\name\\Desktop\\pythonProject\\example_gbk.gbk', "rrrD_1 pxpB", n_before=2, n_after=2) # in windows OS
+fastq_thresholding("/Users/name/Desktop/pythonProject/example_gbk.gbk", "my_file22", length_bounds=(1,1000)) # in Linux/Mac OS
+```
+
+```python
+convert_multiline_fasta_to_oneline('C:\\Users\\name\\Desktop\\pythonProject\\example_multiline_fasta.fasta') # in windows OS
+convert_multiline_fasta_to_oneline("/Users/name/Desktop/pythonProject/example_multiline_fasta.fasta", "my_file22", length_bounds=(1,1000)) # in Linux/Mac OS
+```
+
+```python
+change_fasta_start_pos("C:\\Users\\name\\Desktop\\pythonProject\\docshift.txt", 2, "shifted_line") # in windows OS
+convert_multiline_fasta_to_oneline("/Users/name/Desktop/pythonProject/docshift.txt", 2, "shifted_line") # in Linux/Mac OS
+```
+
 
 ## Input requirements and possible errors:
  - **It is important to indicate the type of operation. An error occurs when you enter an incorrect operation type**
@@ -194,7 +278,21 @@ protein_analysis("AluLysArg", procedure="get_amino_acid_sum", letter_format=3)
 # ValueError: Error alu is not an amino acid. Correct your input
 ```
 
+ - **If file with the name equal to output_filename (in fastq_thresholding function) or equal output_fasta (in convert_multiline_fasta_to_oneline, in select_genes_from_gbk_to_fasta or in change_fasta_start_pos functions) already exists FileExistsError will occure**
+```python
+fastq_thresholding("C:\\Users\\name\\Desktop\\pythonProject\\example_data.txt", "my_file22", length_bounds=(1,1000))
+# FileExistsError: File with the provided name already exist. Please use another name.
+convert_multiline_fasta_to_oneline("C:\\Users\\name\\Desktop\\pythonProject\\example_multiline_fasta.fasta", "my_file22", )
+# FileExistsError: File with the provided name already exist. Please use another name.
+select_genes_from_gbk_to_fasta("C:\\Users\\name\\Desktop\\pythonProject\\example_gbk.gbk", "my_file22", "rrrD_1 pxpB", n_before=2, n_after=2)
+# FileExistsError: File with the provided name already exist. Please use another name.
+```
 
+ - **If at least one of the genes in the parameter genes (function select_genes_from_gbk_to_fasta) is not in the input gbk file ValueError will occure**
+```python
+select_genes_from_gbk_to_fasta('C:\\Users\\name\\Desktop\\pythonProject\\example_gbk.gbk', "AMMMttt", n_before=2, n_after=2)
+# ValueError: 'The gene AMMMttt is not in the data.'
+```
 
 ## Personal contribution
 Protein tool was written in team with:
