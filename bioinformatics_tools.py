@@ -49,8 +49,8 @@ def run_dna_rna_tools(*args: List[str]) -> List[str]:
     return processed_result
 
 
-def protein_analysis(*args: str, procedure: str, cell_type: str = None, \
-    letter_format: int = 1) -> list:
+def protein_analysis(*args: str, procedure: str, cell_type: str = None,
+                    letter_format: int = 1) -> list:
     """
     Function protein_analysis:
     - calculates predicted molecular weight of amino acid sequences in kDa
@@ -129,8 +129,8 @@ def filter_fastq(input_path: str, output_filename: str = '',
         """
     dir_name = os.path.dirname(input_path)
     if output_filename == '':
-        output_filename = re.sub(r'\.[^.]*$', '', \
-                                 os.path.basename(input_path)) + "_output"
+        output_filename = re.sub(r'\.[^.]*$', '',
+                                os.path.basename(input_path)) + "_output"
 
     initial_sequences = []
 
@@ -156,11 +156,11 @@ def filter_fastq(input_path: str, output_filename: str = '',
         os.makedirs(os.path.join(dir_name, 'fastq_filtrator_resuls'))
 
     try:
-        with open(os.path.join(dir_name, 'fastq_filtrator_resuls', \
+        with open(os.path.join(dir_name, 'fastq_filtrator_resuls',
                                f'{output_filename}.fasta'), mode='x') as file:
             for seq in initial_sequences:
                 if is_in_gc_bounds(seq, gc_lower_bound, gc_upper_bound) and \
-                        is_in_length_bounds(seq, length_lower_bound, \
+                        is_in_length_bounds(seq, length_lower_bound,
                                             length_upper_bound) and \
                         is_above_quality_threshold(seq, quality_threshold):
                     file.write(seq.id+'\n')
@@ -478,8 +478,10 @@ def codon_optimization(protein_sequences: list, cell_type: str) -> list:
         return codon_optimization_mouse
     else:
         raise ValueError(
-            f'Type {cell_type} is not supported. The following types of organisms are /'
-            f'available for codon optimization: Esherichia coli, Pichia pastoris, Mouse'
+            f'Type {cell_type} is not supported. \
+            The following types of organisms are \
+            available for codon optimization: \
+            Esherichia coli, Pichia pastoris, Mouse'
         )
 
 
@@ -533,7 +535,8 @@ def name_transform(seqs: tuple, letter_format: int) -> list:
             for triplet in seq3:
                 if is_amino_acid(triplet):
                     pass
-            seq_transformed = "".join([AMINO_NAMES_DIC.get(seq) for seq in seq3])
+            seq_transformed = "".join([AMINO_NAMES_DIC.get(seq) \
+                                       for seq in seq3])
             result.append(seq_transformed)
         return result
     else:
