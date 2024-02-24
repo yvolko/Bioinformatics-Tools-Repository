@@ -3,7 +3,7 @@ import re
 from typing import Tuple, List
 from Bio import SeqIO
 from Bio.SeqUtils import gc_fraction
-from abc import ABC, abstractmethod
+from abc import ABC
 
 
 def run_dna_rna_tools(*args: List[str]) -> List[str]:
@@ -49,24 +49,32 @@ def run_dna_rna_tools(*args: List[str]) -> List[str]:
     return processed_result
 
 
-def protein_analysis(
-        *args: str, procedure: str, cell_type: str = None, letter_format: int = 1
-) -> list:
+def protein_analysis(*args: str, procedure: str, cell_type: str = None, \
+    letter_format: int = 1) -> list:
     """
     Function protein_analysis:
-    - calculates predicted molecular weight of amino acid sequences in kDa (procedure name: molecular_weight)
-    - translate aa sequences from one-letter to three-letter code (procedure name: one_letter_to_three)
-    - calculates total amount of each amino acid in the sequences (procedure name: get_amino_acid_sum)
-    - makes DNA based codon optimization for the introduced amino acid sequences, support 3 types of cells:
-      Esherichia coli, Pichia pastoris, Mouse (procedure name: codon_optimization)
-    - calculates length of amino acid sequences (procedure name: length)
-    - counts the number of atoms of each type in a sequence (procedure name: brutto_count)
+    - calculates predicted molecular weight of amino acid sequences in kDa
+    (procedure name: molecular_weight)
+    - translate aa sequences from one-letter to three-letter code
+    (procedure name: one_letter_to_three)
+    - calculates total amount of each amino acid in the sequences
+    (procedure name: get_amino_acid_sum)
+    - makes DNA based codon optimization for
+    the introduced amino acid sequences, support 3 types of cells:
+      Esherichia coli, Pichia pastoris, Mouse
+      (procedure name: codon_optimization)
+    - calculates length of amino acid sequences
+    (procedure name: length)
+    - counts the number of atoms of each type in a sequence
+    (procedure name: brutto_count)
 
     Arguments:
-    - one or multiple string of protein sequences written one letter or three letter code (not mixed)
+    - one or multiple string of protein sequences written one letter
+    or three letter code (not mixed)
     - name of procedure as string
     - cell type (required only for codon_optimization procedure)
-    - letter_format of code for the protein sequences as int: 1 for one letter, 3 for three letter code
+    - letter_format of code for the protein sequences as int: 1 for one letter,
+     3 for three letter code
 
     Return:
     - molecular_weight procedure returns list of floats
@@ -74,7 +82,8 @@ def protein_analysis(
     - get_amino_acid_sum procedure returns list of dictionaries
     - codon_optimization procedure returns list of strings
     - length procedure returns list of int values
-    - brutto_count procedure returns list of dictionaries with counts of atoms in the sequence
+    - brutto_count procedure returns list of dictionaries with counts
+    of atoms in the sequence
     """
     amino_acid_seqs = name_transform(args, letter_format)
     procedures = {
@@ -98,23 +107,30 @@ def filter_fastq(input_path: str, output_filename: str = '',
                  length_bounds: Tuple[int, int] = (0, 2 ** 32),
                  quality_threshold: int = 0):
     """
-        filter_fastq(seqs: Dict[str, Tuple[str, str]], gc_bounds: Tuple[int, int] = (0, 100),
-                           length_bounds: Tuple[int, int] = (0, 2 ** 32), quality_threshold: int = 0)
+        filter_fastq(seqs: Dict[str, Tuple[str, str]],
+                           gc_bounds: Tuple[int, int] = (0, 100),
+                           length_bounds: Tuple[int, int] = (0, 2 ** 32),
+                           quality_threshold: int = 0)
         :param input_path: path to fastq file
         :param output_filename: desired name for the filered fasta file
         (if not given _output is added to input file name)
-        :param gc_bounds: borders of GC-content that will be used to filter sequence
-        :param length_bounds: borders of sequence length that will be used to filter sequence
-        :param quality_threshold: borders of quality that will be used to filter sequence (mean quality of the sequence
+        :param gc_bounds: borders of GC-content that will be used
+        to filter sequence
+        :param length_bounds: borders of sequence length that will
+        be used to filter sequence
+        :param quality_threshold: borders of quality that will
+        be used to filter sequence (mean quality of the sequence
         is considered to pass the treshold)
         All the borders include upper and lower values.
 
-        :return: dictionary of the same structure as input, that only contains sequences that passed all the
+        :return: dictionary of the same structure as input,
+        that only contains sequences that passed all the
         thresholdings
         """
     dir_name = os.path.dirname(input_path)
     if output_filename == '':
-        output_filename = re.sub(r'\.[^.]*$', '', os.path.basename(input_path)) + "_output"
+        output_filename = re.sub(r'\.[^.]*$', '', \
+                                 os.path.basename(input_path)) + "_output"
 
     initial_sequences = []
 
@@ -140,15 +156,17 @@ def filter_fastq(input_path: str, output_filename: str = '',
         os.makedirs(os.path.join(dir_name, 'fastq_filtrator_resuls'))
 
     try:
-        with open(os.path.join(dir_name, 'fastq_filtrator_resuls', f'{output_filename}.fasta'), mode='x') as file:
+        with open(os.path.join(dir_name, 'fastq_filtrator_resuls', \
+                               f'{output_filename}.fasta'), mode='x') as file:
             for seq in initial_sequences:
                 if is_in_gc_bounds(seq, gc_lower_bound, gc_upper_bound) and \
-                        is_in_length_bounds(seq, length_lower_bound, length_upper_bound) and \
+                        is_in_length_bounds(seq, length_lower_bound, \
+                                            length_upper_bound) and \
                         is_above_quality_threshold(seq, quality_threshold):
                     file.write(seq.id+'\n')
                     file.write(str(seq.seq) + '\n')
     except FileExistsError:
-        print('File with the provided name already exist. Please use another name.')
+        print('File with the provided name exist. Please use another name.')
 
 
 def is_in_gc_bounds(seq, gc_lower_bound: int, gc_upper_bound: int) -> bool:
@@ -416,7 +434,8 @@ def get_amino_acid_sum(protein_sequences: list) -> list:
 
 def codon_optimization(protein_sequences: list, cell_type: str) -> list:
     """
-    Makes codon-optimized DNA based on the introduced amino acid sequences for 3 types of cells:
+    Makes codon-optimized DNA based on the introduced amino acid sequences
+    for 3 types of cells:
     Esherichia coli, Pichia pastoris, Mouse
 
     Arguments:
@@ -431,7 +450,8 @@ def codon_optimization(protein_sequences: list, cell_type: str) -> list:
         replacer_ecoli = ecoli_triplets.get
         for amino_acid in range(len(protein_sequences)):
             codon_optimization_ecoli += [
-                "".join([replacer_ecoli(n, n) for n in protein_sequences[amino_acid]])
+                "".join([replacer_ecoli(n, n) \
+                         for n in protein_sequences[amino_acid]])
             ]
         return codon_optimization_ecoli
 
@@ -441,7 +461,8 @@ def codon_optimization(protein_sequences: list, cell_type: str) -> list:
         for amino_acid in range(len(protein_sequences)):
             codon_optimization_ppastoris += [
                 "".join(
-                    [replacer_ppastoris(n, n) for n in protein_sequences[amino_acid]]
+                    [replacer_ppastoris(n, n)  \
+                     for n in protein_sequences[amino_acid]]
                 )
             ]
         return codon_optimization_ppastoris
@@ -451,7 +472,8 @@ def codon_optimization(protein_sequences: list, cell_type: str) -> list:
         replacer_mouse = mouse_triplets.get
         for amino_acid in range(len(protein_sequences)):
             codon_optimization_mouse += [
-                "".join([replacer_mouse(n, n) for n in protein_sequences[amino_acid]])
+                "".join([replacer_mouse(n, n) \
+                         for n in protein_sequences[amino_acid]])
             ]
         return codon_optimization_mouse
     else:
@@ -476,9 +498,10 @@ def length(seqs: list) -> list:
 
 def name_transform(seqs: tuple, letter_format: int) -> list:
     """
-    Transforms the amino acid sequences given to protein_analysis function from three-letter code to one-letter code,
-    makes sequences unified (for one-letter letter_format all letters to upper and
-    for three-letter letter_format to lower).
+    Transforms the amino acid sequences given to protein_analysis function
+    from three-letter code to one-letter code,
+    makes sequences unified (for one-letter letter_format all letters
+    to upper and for three-letter letter_format to lower).
 
     Arguments:
       - seqs (tuple): tuple of string with the protein sequences
@@ -499,7 +522,8 @@ def name_transform(seqs: tuple, letter_format: int) -> list:
             result.append(seq)
         if all(multiple_of_three) and all(test_three_letters):
             print(
-                "Warning: all your sequences are similar to three-letter ones. Check the letter_format value"
+                "Warning: all your sequences are similar to three-letter ones.\
+                Check the letter_format value"
             )
         return result
     elif letter_format == 3:
@@ -514,24 +538,29 @@ def name_transform(seqs: tuple, letter_format: int) -> list:
         return result
     else:
         raise ValueError(
-            "Error unsupported letter_format. Only letter_formats 1 and 3 are supported"
+            "Error unsupported letter_format. Only letter_formats 1 \
+             and 3 are supported"
         )
 
 
 def is_amino_acid(input_amino: str) -> bool:
     """
-    Checks whether the entered string is an amino acid (either three-letter encoding or one-letter encoded).
+    Checks whether the entered string is an amino acid (either three-letter
+    encoding or one-letter encoded).
 
     Arguments:
-      - input_amino (str): string corresponding to one amino acid (in three-letter code or one-letter code)
+      - input_amino (str): string corresponding to one amino acid
+      (in three-letter code or one-letter code)
 
       Return:
-      - bool: True if amino acid is a valid amino acid, otherwise ValueError is amino acid is not correct
+      - bool: True if amino acid is a valid amino acid, otherwise
+      ValueError is amino acid is not correct
     """
     if len(input_amino) == 1:
         letter = input_amino
         if letter not in AMINO_SHORT_NAMES_DIC.keys():
-            raise ValueError(f"Error {letter} is not an amino acid. Correct your input")
+            raise ValueError(f"Error {letter} \
+            is not an amino acid. Correct your input")
         return True
     elif len(input_amino) == 3:
         triplet = input_amino
@@ -542,7 +571,8 @@ def is_amino_acid(input_amino: str) -> bool:
         return True
     else:
         raise ValueError(
-            f"Error {input_amino} is incorrect form of amino acid notation. Correct your input"
+            f"Error {input_amino} is incorrect form \
+            of amino acid notation. Correct your input"
         )
 
 
@@ -554,7 +584,8 @@ def brutto_count(seqs: list) -> list:
       - seqs (list): list of string with the protein sequences
 
       Return:
-      - list of dictionaries with counts of each elemet included (elements C,H,N,O,S)"""
+      - list of dictionaries with counts of each elemet included
+      (elements C,H,N,O,S)"""
     elements = ["C", "H", "N", "O", "S"]
     result = []
     for seq in seqs:
@@ -584,13 +615,15 @@ def is_length_divisible_by_3(seq: str) -> bool:
 
 def is_amino_acid_three_letter(seq: str) -> bool:
     """
-    Checks whether all elements of a sequence are three-letter amino acid symbols.
+    Checks whether all elements of a sequence are three-letter
+    amino acid symbols.
 
     Arguments:
       - seq (str): string of protein sequence
 
     Return:
-      - bool: True if sequence is corresponding to the valid three-letter amino acid, otherwise False
+      - bool: True if sequence is corresponding to the valid
+      three-letter amino acid, otherwise False
     """
     seq = seq.lower()
     seq3 = [seq[i: i + 3] for i in range(0, len(seq), 3)]
