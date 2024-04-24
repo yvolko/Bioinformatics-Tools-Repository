@@ -330,8 +330,8 @@ def run_genscan(sequence: str = None, sequence_file=None,
 
     def get_exons(row):
         num = int(row['Gn.Ex'].split(".")[1])
-        start = row['Begin']
-        end = row['End']
+        start = int(row['Begin'])
+        end = int(row['End'])
 
         return GenomicElement(num, start, end)
 
@@ -357,3 +357,8 @@ def run_genscan(sequence: str = None, sequence_file=None,
                 protein_prediction[ind] = pp.split('_aa')[1]
 
     return GenscanOutput(status, protein_prediction, introns, all_exons)
+
+
+sequence = 'DYEVTFTEDKINAL'
+peptide = AminoAcidSequence(sequence)
+print(peptide.molecular_weight())
