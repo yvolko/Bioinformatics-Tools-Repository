@@ -1,4 +1,76 @@
 import os
+from dataclasses import dataclass
+
+
+@dataclass
+class FastaRecord:
+    fasta_id: str
+    description: str
+    seq: str
+
+    def __repr__(self):
+        return f"FastaRecord:\nid = {self.fasta_id} \n" \
+               f"description = {self.description} \n" \
+               f"sequence = {self.seq}"
+
+
+class OpenFasta:
+    def __init__(self, file_path, mode='r'):
+        self.file_path = file_path
+        self.mode = mode
+        self.file = None
+        self._current_line = None
+        self._id = None
+        self._description = None
+
+    def __enter__(self):
+        self.file = open(self.file_path, self.mode)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.file.close()
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        record = self.read_record()
+        if record is None:
+            raise StopIteration
+        return record
+
+    def read_record(self):
+        if self._current_line is None:
+            self._current_line = self.file.readline().strip()
+        if self._current_line.startswith(">"):
+            self._id, self._description = self._current_line.split(" ", 1)
+        if not self._current_line:
+            return None
+
+        seq = ""
+        fasta_record = FastaRecord(fasta_id=self._id[1:],
+                                   description=self._description,
+                                   seq="")
+        while True:
+            self._current_line = self.file.readline().strip()
+            if not self._current_line:
+                break
+            if self._current_line.startswith(">"):
+                self._id, self._description = self._current_line.split(" ", 1)
+                break
+            seq += self._current_line
+        fasta_record.seq = seq
+        return fasta_record
+
+    def read_records(self):
+        records = []
+        while True:
+            record = self.read_record()
+            if record:
+                records.append(record)
+            else:
+                break
+        return records
 
 
 def convert_multiline_fasta_to_oneline(input_fasta: str,
@@ -93,7 +165,8 @@ def select_genes_from_gbk_to_fasta(input_gbk: str,
             if right_border >= len(input_dict_position):
                 right_border = len(input_dict_position)
             for key, value in input_dict_position.items():
-                if value in range(left_border, right_border+1) and key != gene:
+                if value in range(left_border,
+                                  right_border + 1) and key != gene:
                     neighbours_of_gene[key] = input_dict_sequences[key]
         else:
             raise ValueError(f'The gene {gene} is not in the data.')
