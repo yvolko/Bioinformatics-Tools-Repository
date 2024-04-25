@@ -357,8 +357,3 @@ def run_genscan(sequence: str = None, sequence_file=None,
                 protein_prediction[ind] = pp.split('_aa')[1]
 
     return GenscanOutput(status, protein_prediction, introns, all_exons)
-
-
-sequence = 'DYEVTFTEDKINAL'
-peptide = AminoAcidSequence(sequence)
-print(peptide.molecular_weight())
