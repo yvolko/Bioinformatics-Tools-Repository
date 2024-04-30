@@ -30,7 +30,7 @@ class RandomForestClassifierCustom(BaseEstimator):
             sample_indices = np.random.choice(x.shape[0], x.shape[0],
                                               replace=True)
 
-            x_sampled = x[sample_indices, feat_ids]
+            x_sampled = x[sample_indices][:, feat_ids]
             y_sampled = y[sample_indices]
 
             if x_sampled.ndim == 1:
@@ -43,24 +43,27 @@ class RandomForestClassifierCustom(BaseEstimator):
 
         seeds = [self.random_state + i for i in range(self.n_estimators - 1)]
 
-        with ThreadPoolExecutor(n_jobs) as pool:
-            pool.map(train_tree, seeds)
+        with ThreadPoolExecutor(max_workers=n_jobs) as pool:
+            futures = [pool.submit(train_tree, seed) for seed in seeds]
+
+        for future in futures:
+            future.result()
 
         return self
 
     def predict_proba(self, x, n_jobs):
         probabilities = []
 
-        def compute_tree_proba(tree, feat_id, x_selected):
+        def compute_tree_proba(tree, feat_id, x):
+            x_selected = x[:, feat_id]
             if x_selected.ndim == 1:
                 x_selected = x_selected.reshape(-1, 1)
             return tree.predict_proba(x_selected)
 
         with ThreadPoolExecutor(max_workers=n_jobs) as pool:
             results = [pool.submit(compute_tree_proba, self.trees[i],
-                                   self.feat_ids_by_tree[i],
-                                   x[:, feat_id]) for i, feat_id in
-                       enumerate(self.feat_ids_by_tree)]
+                                   self.feat_ids_by_tree[i], x) for i in
+                       range(self.n_estimators-1)]
 
         for result in results:
             probabilities.append(result.result())
